@@ -21,6 +21,7 @@ from urllib import urlencode
 from urlparse import urlsplit, urlunsplit
 from cgi import parse_qs
 from cStringIO import StringIO
+from base64 import b64encode
 try:
   import cPickle as pickle
 except ImportError:
@@ -200,6 +201,9 @@ def renderView(request):
     image = delegateRendering(requestOptions['graphType'], graphOptions)
   else:
     image = doImageRender(requestOptions['graphClass'], graphOptions)
+    
+  if format == 'pngbase64':
+    image = b64encode(image)
 
   useSVG = graphOptions.get('outputFormat') == 'svg'
   if useSVG and 'jsonp' in requestOptions:
